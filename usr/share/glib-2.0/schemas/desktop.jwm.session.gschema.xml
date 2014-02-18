@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="desktop.jwm.session" path="/desktop/jwm/session/">
+
+    <key type="b" name="ignore-xdg-autostart">
+      <default>false</default>
+      <summary>Ignore system autostart</summary>
+      <description>If true the session manager will ignore all XDG system and user autostart entries on login.</description>
+    </key>
+    
+    <key type="b" name="generate-jwmrc">
+      <default>true</default>
+      <summary>Automatically generate .jwmrc</summary>
+      <description>If true the session manager will generate .jwmrc automatically. Set this to false if you would like to customise the configuration manually.</description>
+    </key>
+
+    <key type="s" name="desktop-manager">
+      <default>'pcmanfm --desktop'</default>
+      <summary>Desktop manager</summary>
+      <description>The session manager will start this program to manage the desktop wallpaper and icons. If blank, JWM will draw the wallpaper.</description>
+    </key>    
+  </schema>
+</schemalist>

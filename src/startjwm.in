@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+'''
+jwmsession
+    
+    A Python session manager for JWM
+    to make it more comfortable to use as a desktop environment
+
+Copyright 2012 Joshua Higgins
+
+This file is part of the KX Platform Suite.
+
+KX Platform is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published
+by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+
+KX Platform is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with KX Platform. If not, see http://www.gnu.org/licenses/.
+'''
+
+
+import sys
+sys.path.insert(1, '@pythondir@')
+
+
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import GLib
+from dbus.mainloop.glib import DBusGMainLoop
+
+
+import jwmsession.session
+
+
+if __name__ == "__main__":
+    DBusGMainLoop(set_as_default=True)
+    loop = GLib.MainLoop()
+    s = jwmsession.session.Session(loop)
+    s.default()
+    loop.run()

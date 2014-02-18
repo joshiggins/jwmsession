@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="desktop.jwm.configuration" path="/desktop/jwm/configuration/">
+
+    <key type="s" name="menufile">
+      <default>'/etc/jwm/jwm-menu'</default>
+      <summary>Path to menu file</summary>
+      <description>Full path to the menu file to use for this session</description>
+    </key>
+    
+    <key type="i" name="tray-y">
+      <default>-1</default>
+      <summary>Tray Y</summary>
+      <description>Position of tray in Y axis. -1 to stick to bottom of screen.</description>
+    </key>
+    
+    <key type="i" name="tray-height">
+      <default>38</default>
+      <summary>Tray height</summary>
+      <description>Height of tray</description>
+    </key>
+    
+    <key type="b" name="tray-autohide">
+      <default>false</default>
+      <summary>Tray autohide</summary>
+      <description>If true the tray will automatically hide when mouse is not near</description>
+    </key>
+
+	<key type="s" name="clockformat">
+      <default>'%d %h   %I:%M %p'</default>
+      <summary>Clock format</summary>
+      <description>Clock format in strftime</description>
+    </key>
+    
+    <key type="s" name="windowfont">
+      <default>'Ubuntu 11'</default>
+      <summary>Window font</summary>
+      <description>Font string</description>
+    </key>
+    
+    <key type="s" name="trayfont">
+      <default>'Ubuntu 11'</default>
+      <summary>Tray font</summary>
+      <description>Font string</description>
+    </key>
+    
+    <key type="s" name="menufont">
+      <default>'Ubuntu 11'</default>
+      <summary>Menu font</summary>
+      <description>Font string</description>
+    </key>
+    
+  </schema>
+</schemalist>

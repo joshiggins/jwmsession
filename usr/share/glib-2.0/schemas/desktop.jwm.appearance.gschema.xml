@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="desktop.jwm.appearance" path="/desktop/jwm/appearance/">
+
+    <key type="s" name="background-path">
+      <default>'/usr/share/backgrounds/background-default.png'</default>
+      <summary>Path to background image</summary>
+      <description>Full path to the background image</description>
+    </key>
+
+<key type="s" name="monitor-profile">
+      <default>''</default>
+      <summary>Monitor Profile</summary>
+      <description>The monitor profile to activate on login. A monitor profile stores screen resolution and position information. Requires XRandR extension.</description>
+    </key>
+    
+    <key type="i" name="font-dpi">
+      <default>75</default>
+      <summary>Font DPI</summary>
+      <description></description>
+    </key>
+    
+    <key type="s" name="xft-antialias">
+      <default>'true'</default>
+      <summary>Font antialiasing</summary>
+      <description>Fonts will be drawn antialiased</description>
+    </key>
+    
+    <key type="s" name="xft-hinting">
+      <default>'true'</default>
+      <summary>Font hinting</summary>
+      <description></description>
+    </key>
+    
+    <key type="s" name="xft-rgba">
+      <default>'rgb'</default>
+      <summary>Font subpixel hint</summary>
+      <description></description>
+    </key>
+    
+    <key type="s" name="xft-hintstyle">
+      <default>'hintslight'</default>
+      <summary>Font subpixel hint</summary>
+      <description></description>
+    </key>
+    
+    <key type="s" name="font">
+      <default>'Ubuntu Regular 11'</default>
+      <summary>Desktop Font</summary>
+      <description>Font that will be used for all applications.</description>
+    </key>
+    
+    <key type="s" name="gtk-theme">
+      <default>'KXtheme'</default>
+      <summary>Gtk Theme</summary>
+      <description>Name of the Gtk theme to apply for Gtk applications.</description>
+    </key>
+    
+    <key type="s" name="icon-theme">
+      <default>'KXicons'</default>
+      <summary>Icon Theme</summary>
+      <description>Name of the icon theme to apply for all applications.</description>
+    </key>
+
+    <key type="s" name="gtk-toolbar-style">
+      <default>'icons'</default>
+      <summary>Toolbar Style</summary>
+      <description>Can be 'icons', 'text', or 'both'</description>
+    </key>
+    
+  </schema>
+</schemalist>

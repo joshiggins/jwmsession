@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=jwm session
+Comment=jwm session using startjwm
+Exec=jwmsession
+# Icon=
+Type=Application
