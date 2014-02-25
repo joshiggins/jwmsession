@@ -29,7 +29,7 @@ import xdg.IconTheme
 
 class MenuGenerator:
     
-    def _self(self, definition, icontheme):
+    def __init__(self, definition, icontheme):
         self._definition = definition
         self._icontheme = icontheme
         
