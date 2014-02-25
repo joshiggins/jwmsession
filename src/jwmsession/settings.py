@@ -83,7 +83,7 @@ class SettingsWorker:
 
     def reload_settings(self):
         """Reloads the desktop settings from dconf and writes config files"""
-        self.update_jwmrc()
+        #self.update_jwmrc()
         self.set_xrdb()
         self.set_gtk()
         self.set_wallpaper()

@@ -20,7 +20,7 @@ Installing
 ```
 ./configure --prefix=/usr
 make
-make install
+make DESTDIR=/ install
 ```
 
 Setup

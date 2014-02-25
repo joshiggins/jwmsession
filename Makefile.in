@@ -696,7 +696,7 @@ uninstall-am:
 install-data-hook:
 	mkdir -p $(DESTDIR)$(sysconfdir)/xdg/menus
 	cp -r $(srcdir)/etc/xdg/menus/* $(DESTDIR)$(sysconfdir)/xdg/menus/
-	cp -r $(srcdir)/usr $(DESTDIR)$(PREFIX)
+	cp -r $(srcdir)/usr $(DESTDIR)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

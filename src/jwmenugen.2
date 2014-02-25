@@ -25,15 +25,15 @@ along with KX Platform. If not, see http://www.gnu.org/licenses/.
 
 
 import sys
-sys.path.insert(1, '/usr/local/lib/python3/dist-packages')
+sys.path.insert(1, '/usr/lib/python3/dist-packages')
 
 
 import jwmsession.menugen
 
 
 if __name__ == "__main__":
-	xdgdef = "@sysconfdir@/xdg/menus/jwm-applications.menu"
-    mg = jwmsession.menugen.MenuGenerator()
+    xdgdef = "@sysconfdir@/xdg/menus/jwm-applications.menu"
+    mg = jwmsession.menugen.MenuGenerator(xdgdef, sys.argv[2])
     f = open(sys.argv[1], 'wt', encoding='utf-8')
     mg.to_file(f)
     f.close()
