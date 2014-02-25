@@ -63,7 +63,7 @@ class Session():
 
     def autostart(self):
         # Run the xdg autostart
-        if self.SettingsService.get_boolean("ignore-xdg-autostart") is not True:
+        if self.SettingsService.get("desktop.jwm.session", "ignore-xdg-autostart", "boolean") is not True:
             jwmsession.autostart.autostart(['JWM'])
 
     def jwm(self):
