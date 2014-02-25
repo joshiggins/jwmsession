@@ -29,6 +29,7 @@ import dbus.service
 
 
 import jwmsession.dconf
+import jwmsession.rcgen
 
 
 class SettingsService(dbus.service.Object):
@@ -83,7 +84,7 @@ class SettingsWorker:
 
     def reload_settings(self):
         """Reloads the desktop settings from dconf and writes config files"""
-        #self.update_jwmrc()
+        self.update_jwmrc()
         self.set_xrdb()
         self.set_gtk()
         self.set_wallpaper()
@@ -93,17 +94,17 @@ class SettingsWorker:
         if self._service.get('desktop.jwm.session', 'desktop-manager', "string") == "pcmanfm --desktop":
             cmd = "pcmanfm --set-wallpaper=" + self.desktopsettings.get_string("background-path")
             subprocess.Popen(cmd, shell=True)
-        else:
-            # set it using feh, but if the session has already been started
-            # the wallpaper specified in jwmrc will be ignore temporarily, until
-            # the config file is rewritten next login
-            cmd = "feh --bg-scale " + self.desktopsettings.get_string("background-path")
-            subprocess.Popen(cmd, shell=True)
+        # set it using feh, but if the session has already been started
+        # the wallpaper specified in jwmrc will be ignore temporarily, until
+        # the config file is rewritten next login
+        cmd = "feh --bg-scale " + self.desktopsettings.get_string("background-path")
+        subprocess.Popen(cmd, shell=True)
     
     def update_jwmrc(self):
         # write jwmrc if we are allowed
         if self._service.get('desktop.jwm.session', 'generate-jwmrc', "bool"):
-            pass
+            gc = jwmsession.rcgen.ConfGenerator(self)
+            gc.to_user()
 
     def set_xrdb(self, event=None, data=None):
         try:

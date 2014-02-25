@@ -54,6 +54,7 @@ class Session():
 
     def default(self):
         self.settings_manager()
+        self.desktop_manager()
         self.jwm()
         self.autostart()
 
@@ -65,6 +66,9 @@ class Session():
         # Run the xdg autostart
         if self.SettingsService.get("desktop.jwm.session", "ignore-xdg-autostart", "boolean") is not True:
             jwmsession.autostart.autostart(['JWM'])
+            
+    def desktop_manager(self):
+        subprocess.Popen(self.SettingsService.get("desktop.jwm.session", "desktop-manager", "string"), shell=True)
 
     def jwm(self):
         # start JWM!
