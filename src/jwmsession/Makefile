@@ -183,7 +183,8 @@ jwmsession_PYTHON = \
 	dconf.py \
 	menugen.py \
 	session.py \
-	settings.py
+	settings.py \
+	rcgen.py
 
 jwmsessiondir = $(pythondir)/jwmsession
 all: all-am
