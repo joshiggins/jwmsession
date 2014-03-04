@@ -199,7 +199,7 @@ pythondir = ${prefix}/lib/python3/dist-packages
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-sysconfdir = ${prefix}/etc
+sysconfdir = /etc
 target_alias = 
 top_build_prefix = 
 top_builddir = .
@@ -695,7 +695,7 @@ uninstall-am:
 
 install-data-hook:
 	mkdir -p $(DESTDIR)$(sysconfdir)/xdg/menus
-	cp -r $(srcdir)/etc/xdg/menus/* $(DESTDIR)$(sysconfdir)/xdg/menus/
+	cp -r $(srcdir)/etc/* $(DESTDIR)$(sysconfdir)
 	cp -r $(srcdir)/usr $(DESTDIR)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

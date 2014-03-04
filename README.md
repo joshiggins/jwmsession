@@ -18,7 +18,7 @@ Installing
 ----------
 
 ```
-./configure --prefix=/usr
+./configure --prefix=/usr --sysconfdir=/etc
 make
 make DESTDIR=/ install
 ```
