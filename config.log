@@ -28,7 +28,6 @@ uname -v = #64-Ubuntu SMP Wed Sep 11 15:36:42 UTC 2013
 /bin/universe          = unknown
 
 PATH: /home/joshiggins/bin
-PATH: /usr/lib/lightdm/lightdm
 PATH: /usr/local/sbin
 PATH: /usr/local/bin
 PATH: /usr/sbin

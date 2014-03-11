@@ -34,9 +34,10 @@ import jwmsession.rcgen
 
 class SettingsService(dbus.service.Object):
     
-    def __init__(self):
+    def __init__(self, logger):
         bus_name = dbus.service.BusName('org.jwm', bus=dbus.SessionBus())
         dbus.service.Object.__init__(self, bus_name, '/org/jwm/Settings')
+        self.logger = logger
         # Initiate a settings manager
         self.sworker = SettingsWorker(self)
 
@@ -63,10 +64,8 @@ class SettingsWorker:
 
     def __init__(self, service):
         self._service = service
+        self.logger = self._service.logger
         self.desktopsettings = jwmsession.dconf.SettingsWatcher("desktop.jwm.appearance")
-        # Create GTK3 config directory if it doesn't exist
-        if not os.path.exists(os.path.expanduser("~/.config/gtk-3.0/")):
-            os.makedirs(os.path.expanduser("~/.config/gtk-3.0/"))
         # Attach watchers and load settings
         self.reload_settings()
         self.attach_watchers()
@@ -92,22 +91,29 @@ class SettingsWorker:
     def set_wallpaper(self):
         # ping pcmanfm if using it as desktop manager
         if self._service.get('desktop.jwm.session', 'desktop-manager', "string") == "pcmanfm --desktop":
+            self.logger.log_debug("setting wallpaper with pcmanfm")
             cmd = "pcmanfm --set-wallpaper=" + self.desktopsettings.get_string("background-path")
             subprocess.Popen(cmd, shell=True)
-        # set it using feh, but if the session has already been started
-        # the wallpaper specified in jwmrc will be ignore temporarily, until
-        # the config file is rewritten next login
-        cmd = "feh --bg-scale " + self.desktopsettings.get_string("background-path")
-        subprocess.Popen(cmd, shell=True)
+        else:
+            # set it using feh, but if the session has already been started
+            # the wallpaper specified in jwmrc will be ignore temporarily, until
+            # the config file is rewritten next login
+            self.logger.log_debug("setting wallpaper with feh")
+            cmd = "feh --bg-scale " + self.desktopsettings.get_string("background-path")
+            subprocess.Popen(cmd, shell=True)
     
     def update_jwmrc(self):
         # write jwmrc if we are allowed
         if self._service.get('desktop.jwm.session', 'generate-jwmrc', "bool"):
+            self.logger.log_debug("writing jwmrc")
             gc = jwmsession.rcgen.ConfGenerator(self)
             gc.to_user()
+        else:
+            self.logger.log_debug("not writing jwmrc")
 
     def set_xrdb(self, event=None, data=None):
         try:
+            self.logger.log_debug("writing .Xresources")
             f = open(os.path.expanduser("~/.Xresources"), "w")
             f.write("Xft.dpi: " + str(self.desktopsettings.get_int("font-dpi")) + "\n")
             f.write("Xft.antialias: " + self.desktopsettings.get_string("xft-antialias") + "\n")
@@ -115,31 +121,39 @@ class SettingsWorker:
             f.write("Xft.rgba: " + self.desktopsettings.get_string("xft-rgba") + "\n")
             f.write("Xft.hintstyle: " + self.desktopsettings.get_string("xft-hintstyle") + "\n")
             f.close
-            subprocess.Popen(['xrdb', '-merge', os.path.expanduser("~/.Xresources")]).wait()
-        except:
-            pass
+            self.logger.log_debug("merging with xrdb")
+            xrdbcmd = 'xrdb -merge ' + os.path.expanduser("~/.Xresources")
+            subprocess.Popen(xrdbcmd, shell=True).wait()
+        except Exception as e:
+            self.logger.log_error("could not set xrdb " + str(e))
 
     def set_gtk(self, event=None, data=None):
         self.set_gtk3()
         self.set_gtk2()
 
     def set_gtk3(self, event=None, data=None):
+        # Create GTK3 config directory if it doesn't exist
+        if not os.path.exists(os.path.expanduser("~/.config/gtk-3.0/")):
+            self.logger.log_debug("creating gtk3 config directory")
+            os.makedirs(os.path.expanduser("~/.config/gtk-3.0/"))
         try:
+            self.logger.log_debug("writing gtk3 settings.ini")
             f = open(os.path.expanduser("~/.config/gtk-3.0/settings.ini"), "w")
             f.write("[Settings]" + "\n")
             f.write("gtk-theme-name = " + self.desktopsettings.get_string("gtk-theme") + "\n")
             f.write("gtk-icon-theme-name = " + self.desktopsettings.get_string("icon-theme") + "\n")
             f.write("gtk-font-name = " + self.desktopsettings.get_string("font") + "\n")
             f.close
-        except:
-            pass
+        except Exception as e:
+            self.logger.log_error("could not write gtk3 settings.ini" + str(e))
 
     def set_gtk2(self, event=None, data=None):
         try:
+            self.logger.log_debug("writing gtk2 .gtkrc-2.0")
             f = open(os.path.expanduser("~/.gtkrc-2.0"), "w")
             f.write("gtk-theme-name = \"" + self.desktopsettings.get_string("gtk-theme") + "\"\n")
             f.write("gtk-icon-theme-name = \"" + self.desktopsettings.get_string("icon-theme") + "\"\n")
             f.write("gtk-font-name = \"" + self.desktopsettings.get_string("font") + "\"\n")
             f.close
-        except:
-            pass
+        except Exception as e:
+            self.logger.log_debug("could not write gtk2 .gtkrc-2.0 " + str(e))

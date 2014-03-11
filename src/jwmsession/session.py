@@ -23,6 +23,9 @@ along with KX Platform. If not, see http://www.gnu.org/licenses/.
 '''
 
 
+import sys
+import os
+import time
 import subprocess
 import dbus.service
 
@@ -43,13 +46,42 @@ class SessionService(dbus.service.Object):
     def logout(self):
         self.session._jwm.kill()
         self.loop.quit()
+        
+        
+class SessionLogger():
+    
+    def __init__(self):
+        self.terminal = sys.stdout
+
+    def _write(self, message):
+        self.terminal.write(message)
+        with open(os.path.expanduser("~/.jwmsession-log"), "a") as f:
+            f.write(message)
+
+    def _log(self, level, message):
+        line = str(int(time.time())) + ": " + level + ": " + message
+        self._write(line + "\n")
+
+    def log_info(self, message):
+        self._log("info", message)
+
+    def log_warn(self, message):
+        self._log("warn", message)
+
+    def log_error(self, message):
+        self._log("error", message)
+
+    def log_debug(self, message):
+        self._log("debug", message)
 
 
 class Session():
 
     def __init__(self, loop):
         self.session = "JWM"
+        self.logger = SessionLogger()
         # Settings
+        self.logger.log_debug("starting the session manager")
         self.service = SessionService(self, loop)
 
     def default(self):
@@ -60,17 +92,24 @@ class Session():
 
     def settings_manager(self):
         # Start the settings manager
-        self.SettingsService = jwmsession.settings.SettingsService()
+        self.logger.log_debug("starting the settings manager")
+        self.SettingsService = jwmsession.settings.SettingsService(self.logger)
 
     def autostart(self):
         # Run the xdg autostart
         if self.SettingsService.get("desktop.jwm.session", "ignore-xdg-autostart", "boolean") is not True:
+            self.logger.log_debug("running XDG autostart")
             jwmsession.autostart.autostart(['JWM'])
+        else:
+            self.logger.log_debug("skipping XDG autostart")
             
     def desktop_manager(self):
-        subprocess.Popen(self.SettingsService.get("desktop.jwm.session", "desktop-manager", "string"), shell=True)
+        dman = self.SettingsService.get("desktop.jwm.session", "desktop-manager", "string")
+        self.logger.log_debug("starting desktop manager " + dman)
+        subprocess.Popen(dman, shell=True)
 
     def jwm(self):
         # start JWM!
         # keep hold of it so we can kill it on logout
+        self.logger.log_debug("starting jwm")
         self._jwm = subprocess.Popen("jwm", shell=True)
