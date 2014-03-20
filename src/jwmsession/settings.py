@@ -92,14 +92,14 @@ class SettingsWorker:
         if self._service.get('desktop.jwm.session', 'desktop-manager', "string") == "pcmanfm --desktop":
             self.logger.log_debug("setting wallpaper with pcmanfm")
             cmd = "pcmanfm --set-wallpaper=" + self.desktopsettings.get_string("background-path")
-            subprocess.Popen(cmd, shell=True)
+            subprocess.Popen(cmd, shell=True).wait()
         else:
             # set it using feh, but if the session has already been started
             # the wallpaper specified in jwmrc will be ignore temporarily, until
             # the config file is rewritten next login
             self.logger.log_debug("setting wallpaper with feh")
             cmd = "feh --bg-scale " + self.desktopsettings.get_string("background-path")
-            subprocess.Popen(cmd, shell=True)
+            subprocess.Popen(cmd, shell=True).wait()
     
     def update_jwmrc(self):
         # write jwmrc if we are allowed
