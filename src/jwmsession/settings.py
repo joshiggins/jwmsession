@@ -22,7 +22,6 @@ You should have received a copy of the GNU General Public License
 along with KX Platform. If not, see http://www.gnu.org/licenses/.
 '''
 
-
 import os
 import subprocess
 import dbus.service
@@ -52,7 +51,7 @@ class SettingsService(dbus.service.Object):
         s = jwmsession.dconf.SettingsWatcher(schema)
         if rtype == "string":
             return s.get_string(value)
-        elif rtype == "boolean":
+        elif rtype == "bool":
             return s.get_boolean(value)
         elif rtype == "int":
             return s.get_int(value)

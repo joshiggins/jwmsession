@@ -84,6 +84,10 @@ class Session():
         self.logger.log_debug("starting the session manager")
         self.service = SessionService(self, loop)
 
+    def _spawnv(self, cmd):
+        args = ["/bin/sh", "-c", "exec " + cmd]
+        os.spawnv(os.P_NOWAIT, args[0], args);
+
     def default(self):
         self.settings_manager()
         self.desktop_manager()
@@ -106,7 +110,7 @@ class Session():
     def desktop_manager(self):
         dman = self.SettingsService.get("desktop.jwm.session", "desktop-manager", "string")
         self.logger.log_debug("starting desktop manager " + dman)
-        subprocess.Popen(dman, shell=True)
+        self._spawnv(dman)
 
     def jwm(self):
         # start JWM!
