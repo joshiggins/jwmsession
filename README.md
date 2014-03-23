@@ -26,8 +26,8 @@ make DESTDIR=/ install
 Setup
 -----
 
-1. jwmsession includes some gschemas and you really should compile them with `glib-compile-schemas /usr/share/glib-2.0/schemas/`
+1. jwmsession includes some gschemas and you should compile them with `glib-compile-schemas /usr/share/glib-2.0/schemas/`
 2. A .desktop file is placed in /usr/share/xsessions so that you can pick jwmsession from your login manager
-3. Use `jwmenugen` to generate a fancy XDG-based menu file for JWM, complete with icons (much better than debian-menu but not portable).
-4. jwmsession will generate it's own template .jwmrc on every login. Set the `desktop.jwm.session.generate-jwmrc` key to `false` to stop this behaviour.
+3. Use `jwmenugen` to generate a fancy XDG-based menu file for JWM, complete with icons.
+4. jwmsession will generate it's own template .jwmrc on every login. Set the `desktop.jwm.session.generate-jwmrc` key to `false` to stop this behaviour. The template file used to generate this is located in `/etc/jwm/template.jwmrc`.
 5. All other desktop settings (themes, icons, fonts, wallpaper etc etc) can be managed using `gsettings` or `dconf-editor`.
