@@ -69,6 +69,18 @@ class SettingsWorker:
         self.reload_settings()
         self.attach_watchers()
 
+    def _backup_file(self, path):
+        if os.path.exists(path):
+            try:
+                old = open(path, "r").read()
+                bak = open(path + ".bak", "r")
+                bak.write(old)
+                bak.close()
+            except Exception as e:
+                self.logger.log_error("Could not backup " + path + ": " + str(e))
+                return False
+        return True
+
     def attach_watchers(self):
         self.desktopsettings.connect("background-path", self.set_wallpaper)
         self.desktopsettings.connect("font", self.set_gtk)
@@ -106,20 +118,24 @@ class SettingsWorker:
         if self._service.get('desktop.jwm.session', 'generate-jwmrc', "bool"):
             self.logger.log_debug("writing jwmrc")
             gc = jwmsession.rcgen.ConfGenerator(self)
-            gc.to_user()
+            if self._backup_file(os.path.expanduser("~/.jwmrc")):
+                f = open(os.path.expanduser("~/.jwmrc"), "w")
+                gc.to_file(f)
+                f.close()
         else:
             self.logger.log_debug("not writing jwmrc")
 
     def set_xrdb(self, event=None, data=None):
         try:
             self.logger.log_debug("writing .Xresources")
-            f = open(os.path.expanduser("~/.Xresources"), "w")
-            f.write("Xft.dpi: " + str(self.desktopsettings.get_int("font-dpi")) + "\n")
-            f.write("Xft.antialias: " + self.desktopsettings.get_string("xft-antialias") + "\n")
-            f.write("Xft.hinting: " + self.desktopsettings.get_string("xft-hinting") + "\n")
-            f.write("Xft.rgba: " + self.desktopsettings.get_string("xft-rgba") + "\n")
-            f.write("Xft.hintstyle: " + self.desktopsettings.get_string("xft-hintstyle") + "\n")
-            f.close
+            if self._backup_file(os.path.expanduser("~/.Xresources")):
+                f = open(os.path.expanduser("~/.Xresources"), "w")
+                f.write("Xft.dpi: " + str(self.desktopsettings.get_int("font-dpi")) + "\n")
+                f.write("Xft.antialias: " + self.desktopsettings.get_string("xft-antialias") + "\n")
+                f.write("Xft.hinting: " + self.desktopsettings.get_string("xft-hinting") + "\n")
+                f.write("Xft.rgba: " + self.desktopsettings.get_string("xft-rgba") + "\n")
+                f.write("Xft.hintstyle: " + self.desktopsettings.get_string("xft-hintstyle") + "\n")
+                f.close
             self.logger.log_debug("merging with xrdb")
             xrdbcmd = 'xrdb -merge ' + os.path.expanduser("~/.Xresources")
             subprocess.Popen(xrdbcmd, shell=True).wait()
@@ -137,22 +153,24 @@ class SettingsWorker:
             os.makedirs(os.path.expanduser("~/.config/gtk-3.0/"))
         try:
             self.logger.log_debug("writing gtk3 settings.ini")
-            f = open(os.path.expanduser("~/.config/gtk-3.0/settings.ini"), "w")
-            f.write("[Settings]" + "\n")
-            f.write("gtk-theme-name = " + self.desktopsettings.get_string("gtk-theme") + "\n")
-            f.write("gtk-icon-theme-name = " + self.desktopsettings.get_string("icon-theme") + "\n")
-            f.write("gtk-font-name = " + self.desktopsettings.get_string("font") + "\n")
-            f.close
+            if self._backup_file(os.path.expanduser("~/.config/gtk-3.0/settings.ini")):
+                f = open(os.path.expanduser("~/.config/gtk-3.0/settings.ini"), "w")
+                f.write("[Settings]" + "\n")
+                f.write("gtk-theme-name = " + self.desktopsettings.get_string("gtk-theme") + "\n")
+                f.write("gtk-icon-theme-name = " + self.desktopsettings.get_string("icon-theme") + "\n")
+                f.write("gtk-font-name = " + self.desktopsettings.get_string("font") + "\n")
+                f.close
         except Exception as e:
             self.logger.log_error("could not write gtk3 settings.ini" + str(e))
 
     def set_gtk2(self, event=None, data=None):
         try:
             self.logger.log_debug("writing gtk2 .gtkrc-2.0")
-            f = open(os.path.expanduser("~/.gtkrc-2.0"), "w")
-            f.write("gtk-theme-name = \"" + self.desktopsettings.get_string("gtk-theme") + "\"\n")
-            f.write("gtk-icon-theme-name = \"" + self.desktopsettings.get_string("icon-theme") + "\"\n")
-            f.write("gtk-font-name = \"" + self.desktopsettings.get_string("font") + "\"\n")
-            f.close
+            if self._backup_file(os.path.expanduser("~/.gtkrc-2.0")):
+                f = open(os.path.expanduser("~/.gtkrc-2.0"), "w")
+                f.write("gtk-theme-name = \"" + self.desktopsettings.get_string("gtk-theme") + "\"\n")
+                f.write("gtk-icon-theme-name = \"" + self.desktopsettings.get_string("icon-theme") + "\"\n")
+                f.write("gtk-font-name = \"" + self.desktopsettings.get_string("font") + "\"\n")
+                f.close
         except Exception as e:
             self.logger.log_debug("could not write gtk2 .gtkrc-2.0 " + str(e))

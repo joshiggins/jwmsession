@@ -52,6 +52,5 @@ class ConfGenerator():
         newvalue = self._service.get('desktop.jwm.configuration', val, "string")
         self._template.replace('%' + val + '%', newvalue)
         
-    def to_user(self):
-        new = open(os.path.expanduser("~/.jwmrc"), "w")
-        new.write(self._template)
+    def to_file(self, handle):
+        handle.write(self._template)
