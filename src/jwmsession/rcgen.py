@@ -31,9 +31,9 @@ import sys
 
 
 values = [('menufile', 'string'),
-          ('tray-y', 'integer'),
-          ('tray-height', 'integer'),
-          ('tray-autohide', 'integer'),
+          ('tray-y', 'int'),
+          ('tray-height', 'int'),
+          ('tray-autohide', 'int'),
           ('clockformat', 'string'),
           ('windowfont', 'string'),
           ('trayfont', 'string'),
