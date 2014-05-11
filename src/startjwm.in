@@ -38,6 +38,7 @@ import jwmsession.session
 
 
 if __name__ == "__main__":
+	GLib.threads_init()
     DBusGMainLoop(set_as_default=True)
     loop = GLib.MainLoop()
     s = jwmsession.session.Session(loop, '@sysconfdir@')

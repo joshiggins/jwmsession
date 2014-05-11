@@ -11,6 +11,7 @@ do_subconfdir = sed -e 's,[@]sysconfdir[@],$(sysconfdir),g'
 startjwm: startjwm.in Makefile
 	$(do_substitution) < $(srcdir)/startjwm.in > startjwm.2
 	$(do_subconfdir) < $(srcdir)/startjwm.2 > startjwm
+	rm $(srcdir)/startjwm.2
 	chmod +x startjwm
 	
 jwmenugen: jwmenugen.in Makefile

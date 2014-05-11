@@ -45,7 +45,11 @@ class SessionService(dbus.service.Object):
 
     @dbus.service.method('org.jwm.Session')
     def logout(self):
-        self.session._jwm.kill()
+        self.session.logger.log_debug("logging out")
+        try:
+            self.session._jwm.kill()
+        except:
+            self.session.logger.log_debug("jwm has already exited")
         self.loop.quit()
         
         
@@ -89,16 +93,17 @@ class Session():
     def _spawnv(self, cmd):
         args = ["/bin/sh", "-c", "exec " + cmd]
         os.spawnv(os.P_NOWAIT, args[0], args);
-        
-    def _popenAndCall(self, onExit, popenArgs):
-        def runInThread(onExit, popenArgs):
-            proc = subprocess.Popen(*popenArgs, shell=True)
+
+    def _popenAndCallback(self, onExit, *popenArgs, **popenKWArgs):
+        def runInThread(onExit, popenArgs, popenKWArgs):
+            proc = subprocess.Popen(*popenArgs, **popenKWArgs)
             proc.wait()
             onExit()
             return
-        thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
+        thread = threading.Thread(target=runInThread,
+                                  args=(onExit, popenArgs, popenKWArgs))
         thread.start()
-        return thread
+        return thread # returns immediately after the thread starts
 
     def default(self):
         self.settings_manager()
@@ -127,8 +132,7 @@ class Session():
     def jwm(self):
         # start JWM!
         self.logger.log_debug("starting jwm")
-        self._popenAndCall(self._jwm_end, "jwm")
-        
-    def _jwm_end(self):
-        self.logger.log_debug("jwm has exited, ending session")
+        self._popenAndCallback(self._end_jwm, "jwm", shell=True)
+
+    def _end_jwm(self):
         self.service.logout()
