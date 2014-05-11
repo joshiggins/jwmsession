@@ -52,7 +52,7 @@ class ConfGenerator():
         
     def _replace(self, val):
         newvalue = str(self._service.get('desktop.jwm.configuration', val[0], val[1]))
-        self._template.replace('%' + val[0] + '%', str(newvalue))
+        self._template = self._template.replace('%' + val[0] + '%', str(newvalue))
         
     def to_file(self, handle):
         handle.write(self._template)

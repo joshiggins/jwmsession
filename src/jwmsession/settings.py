@@ -74,7 +74,7 @@ class SettingsWorker:
         if os.path.exists(path):
             try:
                 old = open(path, "r").read()
-                bak = open(path + ".bak", "r")
+                bak = open(path + ".bak", "w")
                 bak.write(old)
                 bak.close()
             except Exception as e:
