@@ -27,6 +27,7 @@ import sys
 import os
 import time
 import subprocess
+import threading
 import dbus.service
 
 
@@ -77,7 +78,8 @@ class SessionLogger():
 
 class Session():
 
-    def __init__(self, loop):
+    def __init__(self, loop, ETCDIR):
+        self.ETCDIR = ETCDIR
         self.session = "JWM"
         self.logger = SessionLogger()
         # Settings
@@ -87,6 +89,16 @@ class Session():
     def _spawnv(self, cmd):
         args = ["/bin/sh", "-c", "exec " + cmd]
         os.spawnv(os.P_NOWAIT, args[0], args);
+        
+    def _popenAndCall(self, onExit, popenArgs):
+        def runInThread(onExit, popenArgs):
+            proc = subprocess.Popen(*popenArgs, shell=True)
+            proc.wait()
+            onExit()
+            return
+        thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
+        thread.start()
+        return thread
 
     def default(self):
         self.settings_manager()
@@ -97,7 +109,7 @@ class Session():
     def settings_manager(self):
         # Start the settings manager
         self.logger.log_debug("starting the settings manager")
-        self.SettingsService = jwmsession.settings.SettingsService(self.logger)
+        self.SettingsService = jwmsession.settings.SettingsService(self.ETCDIR, self.logger)
 
     def autostart(self):
         # Run the xdg autostart
@@ -114,6 +126,9 @@ class Session():
 
     def jwm(self):
         # start JWM!
-        # keep hold of it so we can kill it on logout
         self.logger.log_debug("starting jwm")
-        self._jwm = subprocess.Popen("jwm", shell=True)
+        self._popenAndCall(self._jwm_end, "jwm")
+        
+    def _jwm_end(self):
+        self.logger.log_debug("jwm has exited, ending session")
+        self.service.logout()

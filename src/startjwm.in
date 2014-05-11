@@ -40,6 +40,6 @@ import jwmsession.session
 if __name__ == "__main__":
     DBusGMainLoop(set_as_default=True)
     loop = GLib.MainLoop()
-    s = jwmsession.session.Session(loop)
+    s = jwmsession.session.Session(loop, '@sysconfdir@')
     s.default()
     loop.run()

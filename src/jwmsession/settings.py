@@ -33,7 +33,8 @@ import jwmsession.rcgen
 
 class SettingsService(dbus.service.Object):
     
-    def __init__(self, logger):
+    def __init__(self, ETCDIR, logger):
+        self.ETCDIR = ETCDIR
         bus_name = dbus.service.BusName('org.jwm', bus=dbus.SessionBus())
         dbus.service.Object.__init__(self, bus_name, '/org/jwm/Settings')
         self.logger = logger

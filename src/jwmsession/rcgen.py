@@ -27,28 +27,32 @@ along with KX Platform. If not, see http://www.gnu.org/licenses/.
 '''
 
 
-values = ['menufile',
-          'tray-y',
-          'tray-height',
-          'tray-autohide',
-          'clockformat',
-          'windowfont',
-          'trayfont',
-          'menufont']
+import sys
 
-template_path = "@sysconfdir@/jwm/template.jwmrc"
+
+values = [('menufile', 'string'),
+          ('tray-y', 'integer'),
+          ('tray-height', 'integer'),
+          ('tray-autohide', 'integer'),
+          ('clockformat', 'string'),
+          ('windowfont', 'string'),
+          ('trayfont', 'string'),
+          ('menufont', 'string')
+          ]
+
+template_path = "/jwm/template.jwmrc"
 
 class ConfGenerator():
     
     def __init__(self, SettingsWorkerInstance):
         self._service = SettingsWorkerInstance._service
-        self._template = open(template_path, "r").read()
+        self._template = open(self._service.ETCDIR + template_path, "r").read()
         for val in values:
             self._replace(val)
         
     def _replace(self, val):
-        newvalue = self._service.get('desktop.jwm.configuration', val, "string")
-        self._template.replace('%' + val + '%', newvalue)
+        newvalue = str(self._service.get('desktop.jwm.configuration', val[0], val[1]))
+        self._template.replace('%' + val[0] + '%', str(newvalue))
         
     def to_file(self, handle):
         handle.write(self._template)
