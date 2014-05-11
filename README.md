@@ -1,5 +1,4 @@
 # jwmsession
-===============
 
 jwmsession is a kind of session manager written for (but in no way endorsed by) JWM, with the aim of making a more comfortable desktop environment but keeping the speed and simplicity of a window manager.
 
