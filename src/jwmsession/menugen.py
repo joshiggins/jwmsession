@@ -41,9 +41,9 @@ class MenuGenerator:
             if isinstance(entry, xdg.Menu.Menu) and entry.Show is True:
                 try:
                     menu_icon_path = xdg.IconTheme.getIconPath(entry.getIcon(), 24, self._icontheme)
-                    lines.append('<Menu icon="' + menu_icon_path + '" label="' + entry.getName() + '">')
+                    lines.append('    <Menu icon="' + menu_icon_path + '" label="' + entry.getName() + '">')
                 except:
-                    lines.append('<Menu label="' + entry.getName() + '">')
+                    lines.append('    <Menu label="' + entry.getName() + '">')
                 for entry2 in entry.getEntries():
                     try:
                         name = entry2.DesktopEntry.getName()
@@ -51,18 +51,18 @@ class MenuGenerator:
                         texec = entry2.DesktopEntry.getExec().split("%")[0]
                         try:
                             icon_path = xdg.IconTheme.getIconPath(icon_name, 24, self._icontheme)
-                            lines.append('<Program label="' + name + '" icon="' + icon_path + '" confirm="false">' + texec + "</Program>")
+                            lines.append('        <Program label="' + name + '" icon="' + icon_path + '" confirm="false">' + texec + "</Program>")
                         except:
-                            lines.append('<Program label="' + name + '" confirm="false">' + texec + "</Program>")
+                            lines.append('        <Program label="' + name + '" confirm="false">' + texec + "</Program>")
                     except:
                         pass
-                lines.append('</Menu>')
+                lines.append('    </Menu>')
         lines.append("</JWM>")
         return lines
     
     def to_file(self, handle):
         for line in self._write():
-            handle.write(line)
+            handle.write(line + "\n")
             
 
 if __name__ == "__main__":
