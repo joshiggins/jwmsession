@@ -106,8 +106,9 @@ class Session():
         return thread # returns immediately after the thread starts
 
     def default(self):
-        self.settings_manager()
+        # start desktop manager before settings
         self.desktop_manager()
+        self.settings_manager()
         self.jwm()
         self.autostart()
 
