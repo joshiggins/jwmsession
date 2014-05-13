@@ -66,8 +66,7 @@ class SettingsWorker:
         self._service = service
         self.logger = self._service.logger
         self.desktopsettings = jwmsession.dconf.SettingsWatcher("desktop.jwm.appearance")
-        # Attach watchers and load settings
-        self.reload_settings()
+        # Attach watchers
         self.attach_watchers()
 
     def _backup_file(self, path):

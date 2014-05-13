@@ -107,8 +107,11 @@ class Session():
 
     def default(self):
         # start desktop manager before settings
-        self.desktop_manager()
         self.settings_manager()
+        self.desktop_manager()
+        # only reload settings once the managers have started
+        self.SettingsService.reloadSettings()
+        # then continue starting session
         self.jwm()
         self.autostart()
 
