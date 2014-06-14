@@ -30,14 +30,15 @@ along with KX Platform. If not, see http://www.gnu.org/licenses/.
 import sys
 
 
-values = [('menufile', 'string'),
-          ('tray-y', 'int'),
-          ('tray-height', 'int'),
-          ('tray-autohide', 'int'),
-          ('clockformat', 'string'),
-          ('windowfont', 'string'),
-          ('trayfont', 'string'),
-          ('menufont', 'string')
+values = [('desktop.jwm.configuration', 'menufile', 'string'),
+          ('desktop.jwm.configuration', 'tray-y', 'int'),
+          ('desktop.jwm.configuration', 'tray-height', 'int'),
+          ('desktop.jwm.configuration', 'tray-autohide', 'int'),
+          ('desktop.jwm.configuration', 'clockformat', 'string'),
+          ('desktop.jwm.configuration', 'windowfont', 'string'),
+          ('desktop.jwm.configuration', 'trayfont', 'string'),
+          ('desktop.jwm.configuration', 'menufont', 'string'),
+          ('desktop.jwm.appearance', 'background-path', 'string')
           ]
 
 template_path = "/jwm/template.jwmrc"
@@ -51,8 +52,8 @@ class ConfGenerator():
             self._replace(val)
         
     def _replace(self, val):
-        newvalue = str(self._service.get('desktop.jwm.configuration', val[0], val[1]))
-        self._template = self._template.replace('%' + val[0] + '%', str(newvalue))
+        newvalue = str(self._service.get(val[0], val[1], val[2]))
+        self._template = self._template.replace('%' + val[1] + '%', str(newvalue))
         
     def to_file(self, handle):
         handle.write(self._template)
