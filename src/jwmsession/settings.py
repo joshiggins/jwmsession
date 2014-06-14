@@ -25,6 +25,7 @@ along with KX Platform. If not, see http://www.gnu.org/licenses/.
 import os
 import subprocess
 import dbus.service
+from gi.repository import GLib
 
 
 import jwmsession.dconf
@@ -99,12 +100,16 @@ class SettingsWorker:
         self.set_gtk()
         self.set_wallpaper()
         
+    def _set_pcmanfm_wallpaper(self):
+        self.logger.log_debug("setting wallpaper with pcmanfm")
+        subprocess.Popen("pcmanfm --wallpaper-mode=fit", shell=True).wait()
+        subprocess.Popen("pcmanfm --set-wallpaper=" + self.desktopsettings.get_string("background-path"), shell=True).wait()
+        
     def set_wallpaper(self):
         # ping pcmanfm if using it as desktop manager
         if self._service.get('desktop.jwm.session', 'desktop-manager', "string") == "pcmanfm --desktop":
-            self.logger.log_debug("setting wallpaper with pcmanfm")
-            cmd = "pcmanfm --set-wallpaper=" + self.desktopsettings.get_string("background-path")
-            subprocess.Popen(cmd, shell=True).wait()
+            # incase the session is just starting, we need to wait for pcmanfm to actually be running
+            GLib.timeout_add_seconds(2, self._set_pcmanfm_wallpaper)
         else:
             # set it using feh, but if the session has already been started
             # the wallpaper specified in jwmrc will be ignore temporarily, until
