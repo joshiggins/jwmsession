@@ -33,21 +33,21 @@
     </key>
     
     <key type="s" name="windowfont">
-      <default>'Ubuntu 11'</default>
+      <default>'Ubuntu-11:weight=medium'</default>
       <summary>Window font</summary>
-      <description>Font string</description>
+      <description>XFT Font string</description>
     </key>
     
     <key type="s" name="trayfont">
-      <default>'Ubuntu 11'</default>
+      <default>'Ubuntu-11:weight=light'</default>
       <summary>Tray font</summary>
-      <description>Font string</description>
+      <description>XFT Font string</description>
     </key>
     
     <key type="s" name="menufont">
-      <default>'Ubuntu 11'</default>
+      <default>'Ubuntu-11:weight=light'</default>
       <summary>Menu font</summary>
-      <description>Font string</description>
+      <description>XFT Font string</description>
     </key>
     
   </schema>
