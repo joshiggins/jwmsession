@@ -38,7 +38,8 @@ values = [('desktop.jwm.configuration', 'menufile', 'string'),
           ('desktop.jwm.configuration', 'windowfont', 'string'),
           ('desktop.jwm.configuration', 'trayfont', 'string'),
           ('desktop.jwm.configuration', 'menufont', 'string'),
-          ('desktop.jwm.appearance', 'background-path', 'string')
+          ('desktop.jwm.appearance', 'background-path', 'string'),
+          ('desktop.jwm.appearance', 'icon-theme', 'string'),
           ]
 
 template_path = "/jwm/template.jwmrc"
