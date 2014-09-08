@@ -102,7 +102,7 @@ class SettingsWorker:
         
     def _set_pcmanfm_wallpaper(self):
         self.logger.log_debug("setting wallpaper with pcmanfm")
-        subprocess.Popen("pcmanfm --wallpaper-mode=fit", shell=True).wait()
+        subprocess.Popen("pcmanfm --wallpaper-mode=crop", shell=True).wait()
         subprocess.Popen("pcmanfm --set-wallpaper=" + self.desktopsettings.get_string("background-path"), shell=True).wait()
         
     def set_wallpaper(self):
