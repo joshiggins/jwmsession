@@ -63,6 +63,10 @@ class MenuGenerator:
     def to_file(self, handle):
         for line in self._write():
             handle.write(line + "\n")
+
+    def to_screen(self):
+        for line in self._write():
+            print(line)
             
 
 if __name__ == "__main__":

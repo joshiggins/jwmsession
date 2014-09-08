@@ -31,9 +31,22 @@ sys.path.insert(1, '@pythondir@')
 import jwmsession.menugen
 
 
+helptext = """jwmenugen is a menu generator for JWM and is called like this:
+$ jwmenugen <icon theme name> <optional file to write>
+
+You can include a generated file in your jwmrc or you can just exec this
+program with no file argument within the include tag"""
+
+
 if __name__ == "__main__":
     xdgdef = "@sysconfdir@/xdg/menus/jwm-applications.menu"
-    mg = jwmsession.menugen.MenuGenerator(xdgdef, sys.argv[2])
-    f = open(sys.argv[1], 'wt', encoding='utf-8')
-    mg.to_file(f)
-    f.close()
+    if not len(sys.argv) == 2:
+        print(helptext)
+        raise SystemExit()
+    mg = jwmsession.menugen.MenuGenerator(xdgdef, sys.argv[1])
+    if len(sys.argv) == 3:
+        f = open(sys.argv[2], 'wt', encoding='utf-8')
+        mg.to_file(f)
+        f.close()
+    else:
+        mg.to_screen()
